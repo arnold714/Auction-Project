@@ -1,5 +1,7 @@
 package com.example.demo.card;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,5 +50,12 @@ public class CardController {
 	public String deleteCard(@PathVariable int cardnum) {
 		service.deleteCard(cardnum);
 		return "redirect:/auth/card";
+	}
+	
+	@GetMapping
+	public String getAllCards(Model model) {
+		List<CardDto> cards = service.getAllCards();
+		model.addAttribute("cards", cards);
+		return "cardlist";
 	}
 }
