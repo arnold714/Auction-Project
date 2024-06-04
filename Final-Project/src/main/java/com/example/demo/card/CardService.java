@@ -17,15 +17,6 @@ public class CardService {
 		return new CardDto(c.getCardnum(), c.getExpiryDate(),c.getCvc(),c.getPwd(),c.getPrice());
 	}
 	
-	public ArrayList<CardDto> getByName(String holdername) {
-		List<Card> l = dao.findByHoldername(holdername);
-		ArrayList<CardDto> list = new ArrayList<>();
-		for (Card c: l) {
-			list.add(new CardDto(c.getCardnum(),c.getExpiryDate(),c.getCvc(),c.getPwd(),c.getPrice()));
-		}
-		return list;
-		
-	}
 	
 	public CardDto getCard(int cardnum) {
 		Card c = dao.findById(cardnum).orElse(null);

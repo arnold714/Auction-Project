@@ -19,12 +19,6 @@ public class CardController {
 	@Autowired
 	private CardService service;
 	
-	@GetMapping
-	public String listCards(Model model) {
-		List<CardDto> cards = service.getByName("");
-		model.addAttribute("cards", cards);
-		return "cardlist";
-	}
 	
 	@GetMapping("/{caardnum}")
 	public String getCard(@PathVariable int cardnum, Model model) {

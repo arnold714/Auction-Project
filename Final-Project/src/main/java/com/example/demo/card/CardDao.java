@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface CardDao extends JpaRepository<Card, Integer> {
 
 
-	List<Card> findByHoldername(String holdername);
 
 }
