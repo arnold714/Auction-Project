@@ -26,9 +26,9 @@ public class CardController {
 		return "cardlist";
 	}
 	
-	@GetMapping("/{num}")
-	public String getCard(@PathVariable int num, Model model) {
-		CardDto card = service.getCard(num);
+	@GetMapping("/{caardnum}")
+	public String getCard(@PathVariable int cardnum, Model model) {
+		CardDto card = service.getCard(cardnum);
 		model.addAttribute("card", card);
 		return "carddetail";
 	}
@@ -45,14 +45,14 @@ public class CardController {
 		return "redirect:/auth/card";
 	}
 	
-	@PostMapping("/edit/{num}")
+	@PostMapping("/edit/{cardnum}")
 	public String editCard(@PathVariable int cardnum, @ModelAttribute CardDto cardDto) {
 		cardDto.setCardnum(cardnum);
 		service.saveCard(cardDto);
 		return "redirect:/auth/card";
 	}
 	
-	@GetMapping("/delete/{num}")
+	@GetMapping("/delete/{cardnum}")
 	public String deleteCard(@PathVariable int cardnum) {
 		service.deleteCard(cardnum);
 		return "redirect:/auth/card";
