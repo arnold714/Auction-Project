@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Card Form</title>
+</head>
+<body>
+    <h1>Card Form</h1>
+    <form th:action="@{/auth/card/add}" th:object="${card}" method="post">
+        <div>
+            <label for="cardnum">Card Number:</label>
+            <input type="text" id="cardnum" th:field="*{cardnum}" readonly="readonly"/>
+        </div>
+        <div>
+            <label for="expiryDate">Expiry Date:</label>
+            <input type="text" id="expiryDate" th:field="*{expiryDate}" />
+        </div>
+        <div>
+            <label for="cvc">CVC:</label>
+            <input type="text" id="cvc" th:field="*{cvc}" />
+        </div>
+        <div>
+            <label for="pwd">Password:</label>
+            <input type="text" id="pwd" th:field="*{pwd}" />
+        </div>
+        <div>
+            <label for="price">Price:</label>
+            <input type="text" id="price" th:field="*{price}" />
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+    <a th:href="@{/auth/card}">Back to list</a>
+</body>
+</html>

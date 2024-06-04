@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Card Detail</title>
+  </head>
+<body>
+    <h1>Card Detail</h1>
+    <div>
+        <p><strong>Card Number:</strong> <span th:text="${card.cardnum}"></span></p>
+        <p><strong>Expiry Date:</strong> <span th:text="${card.expiryDate}"></span></p>
+        <p><strong>CVC:</strong> <span th:text="${card.cvc}"></span></p>
+        <p><strong>Password:</strong> <span th:text="${card.pwd}"></span></p>
+        <p><strong>Price:</strong> <span th:text="${card.price}"></span></p>
+    </div>
+    <a th:href="@{/auth/card}">Back to list</a>
+    <a th:href="@{/auth/card/edit/{cardnum}(cardnum=${card.cardnum})}">Edit</a>
+    <a th:href="@{/auth/card/delete/{cardnum}(cardnum=${card.cardnum})}">Delete</a>
+</body>
+</html>
