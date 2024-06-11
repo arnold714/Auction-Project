@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Card List</title>
+</head>
+<body>
+    <h3>Card List</h3>
+<a href="/index">Home</a><br/>    
+<table border="1">
+<tr><th>Card Number</th><th>Expiry Date</th><th>CVC</th><th>Password</th><th>Price</th></tr>
+ <tr th:each="c:${list}">
+ 				<td><a th:href="@{auth/card/get(cardnum=${c.cardnum})}" th:text="${c.cardnum}"></a></td>
+                <td th:text="${c.cardnum}"></td>
+                <td th:text="${c.expiryDate}"></td>
+                <td th:text="${c.cvc}"></td>
+                <td th:text="${c.pwd}"></td>
+                <td th:text="${c.price}"></td>
+ </tr>
+</table>
+</body>
+</html>

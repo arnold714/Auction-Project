@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Card Form</title>
+</head>
+<body>
+    <h3>카드 등록</h3>
+    <form action="/auth/card/add" method="post">
+    <table border="1">
+        <tr>
+        <th>Card Number</th>
+            <td>
+            <input type="text" id="cardnum" name="cardnum">
+            </td>
+        </tr>
+        <tr>
+            <th>Expiry Date</th><td><input type="text" name="expiryDate"></td>
+        </tr>
+        <tr>
+            <th>CVC:</th><td><input type="password" name="cvc"></td>            
+        </tr>
+        <tr>
+            <th>Password:</th><td><input type="password" name="pwd"></td>
+        </tr>
+        <tr>
+            <th>Price:</th><td><input type="text" name="price"></td>
+        </tr>
+        <tr>
+        	<th>Registration</th><td><input type="submit" value="등록"></td>
+        </tr>
+</table>    
+</form>   
+</body>
+</html>

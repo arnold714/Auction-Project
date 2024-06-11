@@ -1,13 +1,11 @@
 package com.example.demo.card;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,43 +17,34 @@ public class CardController {
 	@Autowired
 	private CardService service;
 	
-	
-	@GetMapping("/{caardnum}")
-	public String getCard(@PathVariable int cardnum, Model model) {
-		CardDto card = service.getCard(cardnum);
-		model.addAttribute("card", card);
-		return "carddetail";
+	@GetMapping("/list")
+	public String list(ModelMap map) {
+		map.addAttribute("list", service.getAllCards());
+		return "card/list";
 	}
 	
 	@GetMapping("/add")
-	public String showAddCardForm(Model model) {
-		model.addAttribute("card", new CardDto());
-		return "cardform";
+	public void addform() {
 	}
 	
 	@PostMapping("/add")
-	public String addCard(@ModelAttribute CardDto cardDto) {
-		service.saveCard(cardDto);
-		return "redirect:/auth/card";
+	public String add(CardDto c) {
+		service.save(c);
+		return "card/add";
 	}
 	
-	@PostMapping("/edit/{cardnum}")
-	public String editCard(@PathVariable int cardnum, @ModelAttribute CardDto cardDto) {
-		cardDto.setCardnum(cardnum);
-		service.saveCard(cardDto);
-		return "redirect:/auth/card";
+	@GetMapping("/get")
+	public String getbycardnum(int cardnum, ModelMap map) {
+		map.addAttribute("s", service.getCard(cardnum));
+		return "card/detail";
 	}
 	
-	@GetMapping("/delete/{cardnum}")
-	public String deleteCard(@PathVariable int cardnum) {
-		service.deleteCard(cardnum);
-		return "redirect:/auth/card";
+	
+	
+	@GetMapping("/del")
+	public String del(int cardnum) {
+		service.delCard(cardnum);
+		return "redirect:/index";
 	}
 	
-	@GetMapping
-	public String getAllCards(Model model) {
-		List<CardDto> cards = service.getAllCards();
-		model.addAttribute("cards", cards);
-		return "cardlist";
-	}
 }
