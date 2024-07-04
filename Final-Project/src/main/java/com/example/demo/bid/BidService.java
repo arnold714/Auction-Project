@@ -1,7 +1,9 @@
 package com.example.demo.bid;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.example.demo.user.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +49,14 @@ public class BidService {
 	public BidDto getByBuyer(int auction) {
 		ArrayList<Bid> byBuyerByPrice = dao.findByBuyerByPrice(auction);
 		return BidDto.create(byBuyerByPrice.get(0));
+	}
+
+	public ArrayList<BidDto> getByBuyer2(String buyer) {
+		List<Bid> l = dao.findByBuyerOrderByNumDesc(new Member(buyer, null, null, null, null, 0, null, 0, null));
+		ArrayList<BidDto> list = new ArrayList<>();
+		for(Bid b:l) {
+			list.add(BidDto.create(b));
+		}
+		return list;
 	}
 }

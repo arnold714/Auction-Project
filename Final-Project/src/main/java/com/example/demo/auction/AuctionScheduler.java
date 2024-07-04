@@ -87,11 +87,16 @@ public class AuctionScheduler {
 						});
 						Random random = new Random();
 						double randomNumber = random.nextDouble(); // 0부터 1 사이의 랜덤 숫자 생성
-						// Stream API를 활용한 랜덤 선택
-						Member winner = map2.entrySet().stream().filter(entry -> randomNumber < entry.getValue())
-								.map(Map.Entry::getKey) // 당첨자 이름으로 매핑
-								.findFirst() // 첫 번째 당첨자 찾기
-								.orElse(null); // 찾지 못할 경우 null 반환
+						double cumulativeProbability = 0.0;
+						Member winner = null;
+
+						for (Map.Entry<Member, Double> entry : map2.entrySet()) {
+						    cumulativeProbability += entry.getValue();				    
+						    if (randomNumber < cumulativeProbability) {
+						        winner = entry.getKey();
+						        break;
+						    }
+						}
 						byBuyer.setBuyer(winner);
 						System.out.println("우승자는~~~~~~~~~~~~~~~~~~~~~~~~~"+winner);
 						System.out.println("우승자는~~~~~~~~~~~~~~~~~~~~~~~~~"+byBuyer.getBuyer());
@@ -102,7 +107,7 @@ public class AuctionScheduler {
 						event.sendMessage("/sub/bid", mapent);
 					}
 					auction.setMino(byBuyer.getBuyer());  // 최종 낙찰자를 aution table에 넣기 위한 코드
-					Notification mino = Notification.create(auction.getMino().getId(), auction.getTitle(),"입찰되었습니다!"); // 최종 낙찰자에게 알림
+					Notification mino = Notification.create(auction.getMino().getId(), auction.getTitle(),"낙찰되었습니다!"); // 최종 낙찰자에게 알림
 					notificationRepository.save(mino); // 최종 낙찰자 저장
 					messagingTemplate.convertAndSend("/sub/notice/list/"+auction.getMino().getId(), notificationRepository.findByName(auction.getMino().getId())); // 최종 낙찰자에게 알림
 					System.out.println(1);

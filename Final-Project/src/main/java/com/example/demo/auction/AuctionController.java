@@ -78,11 +78,11 @@ public class AuctionController {
 		AuctionDto auction=aservice.get(b.getParent());
 		map.put("parent", b.getParent());
 		BidDto dto=new BidDto(b.getNum(),Auction.create(auction),Member.create(buyer),b.getPrice(),new Date());
+		if(dto.getBidtime().after(auction.getEnd_time())) {
+			map.put("msg","end");
+			return map;
+		}
 		if(!(auction.getType().equals(Auction.Type.EVENT))) {
-			if(dto.getBidtime().after(auction.getEnd_time())) {
-				map.put("msg","end");
-				return map;
-			}
 			if(bservice.getByParent(b.getParent()).size()>0 && !(auction.getType().equals(Auction.Type.BLIND))) {
 				BidDto pbid=bservice.getByBuyer(auction.getNum());
 				int getPoint=pbid.getPrice();
@@ -157,6 +157,13 @@ public class AuctionController {
 		String seller = (String) session.getAttribute("loginId");
 		map.addAttribute("list", aservice.getBySeller(seller));
 		return "auction/myauction";
+	}
+
+	@GetMapping("/mybidauction")
+	public String mybidauction(ModelMap map,HttpSession session) {
+		String buyer = (String) session.getAttribute("loginId");
+		map.addAttribute("list", bservice.getByBuyer2(buyer));
+		return "auction/mybidauction";
 	}
 
 	@GetMapping("/stop")

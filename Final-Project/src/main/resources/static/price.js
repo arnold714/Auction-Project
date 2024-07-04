@@ -11,7 +11,6 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/sub/bid', (max) => {
 		let response=JSON.parse(max.body);
 		if(response.parent == $('#num').val()){
-			alert(response)
 			if(response.msg != null ){
 				if(response.mino != null){
 					window.location.href = '/auth/auction/event?mino='+response.mino;
@@ -122,7 +121,6 @@ $(function () {
     $( "#btn" ).click(() => sendPrice())
 });
 window.onload =()=> connect();
-window.onunload=()=>disconnect();
 
 
 

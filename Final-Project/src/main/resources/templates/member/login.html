@@ -182,12 +182,15 @@
         const a = () => {
             flag = false;
             const req = new XMLHttpRequest();
+            let signup=document.getElementById('signup');
             req.onload = () => {
                 let obj = JSON.parse(req.responseText);//req.responseText => {flag:true}
                 let txt = '중복된 아이디';
+                signup.disabled=true;
                 if (obj.flag) {
                     txt = '사용가능 아이디';
                     flag = true;
+                    signup.disabled=false;
                 }
                 document.getElementById('res').innerHTML = txt;
             }
@@ -223,7 +226,7 @@
                     <input type="text" name="name" placeholder="Name">
                     <input type="text" name="email" placeholder="Email">
                     <input type="hidden" name="type" value="member">
-                    <button class="form_btn">Sign Up</button>
+                    <button class="form_btn" id="signup" disabled>Sign Up</button>
                 </form>
             </div>
 
