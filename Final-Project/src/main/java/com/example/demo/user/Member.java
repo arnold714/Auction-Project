@@ -1,14 +1,11 @@
 package com.example.demo.user;
 
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.demo.card.Card;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +32,7 @@ public class Member {
     private Card cardnum;
 
     private int point;
-
-    private String rank;
+    private String ranks;
 
     private int exp;
 
@@ -44,8 +40,8 @@ public class Member {
 
 	@PrePersist
 	public void prePersist() {
-		if (this.rank == null) {
-			this.rank = "Bronze";
+		if (this.ranks == null) {
+			this.ranks = "Bronze";
 		}
 	}
     
@@ -57,7 +53,7 @@ public class Member {
     			.email(dto.getEmail())
     			.cardnum(dto.getCardnum())
     			.point(dto.getPoint())
-    			.rank(dto.getRank())
+    			.rank(dto.getRanks())
     			.exp(dto.getExp())
     			.type(dto.getType())
     			.build();
@@ -72,7 +68,7 @@ public class Member {
 		this.email = email;
 		this.cardnum = cardnum;
 		this.point = point;
-		this.rank = rank;
+		this.ranks = rank;
 		this.exp = exp;
 		this.type = type;
 	}
