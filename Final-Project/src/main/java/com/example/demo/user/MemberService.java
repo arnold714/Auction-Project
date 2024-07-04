@@ -20,8 +20,8 @@ public class MemberService {
    public MemberDto save(MemberDto dto) {
       // dao.save() 반환값: 방금 추가/수정한 그 행을 검색해서 entity에 담아서 반환
       Member u = dao.save(new Member(dto.getId(),passwordEncoder.encode(dto.getPwd()),dto.getName(),dto.getEmail(),dto.getCardnum(),
-            dto.getPoint(),dto.getRank(),dto.getExp(),dto.getType()));
-      return new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRank(),u.getExp(),u.getType());
+            dto.getPoint(),dto.getRanks(),dto.getExp(),dto.getType()));
+      return new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRanks(),u.getExp(),u.getType());
    }
 
    public void edit(MemberDto dto) {
@@ -32,7 +32,7 @@ public class MemberService {
       u.setEmail(dto.getEmail());
       u.setCardnum(dto.getCardnum());
       u.setPoint(dto.getPoint());
-      u.setRank(dto.getRank());
+      u.setRanks(dto.getRanks());
       dao.save(u);
    }
 
@@ -43,7 +43,7 @@ public class MemberService {
       if (u == null) {
          return null;
       }
-      return new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRank(),u.getExp(),u.getType());
+      return new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRanks(),u.getExp(),u.getType());
    }
 
    // 전체검색: findAll()
@@ -51,7 +51,7 @@ public class MemberService {
       List<Member> l = dao.findAll();
       ArrayList<MemberDto> list = new ArrayList<>();
       for (Member u : l) {
-         list.add(new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRank(),u.getExp(),u.getType()));
+         list.add(new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRanks(),u.getExp(),u.getType()));
       }
       return list;
    }
@@ -66,7 +66,7 @@ public class MemberService {
       List<Member> l = dao.findByType(type);
       ArrayList<MemberDto> list = new ArrayList<>();
       for (Member u : l) {
-         list.add(new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRank(),u.getExp(),u.getType()));
+         list.add(new MemberDto(u.getId(),u.getPwd(),u.getName(),u.getEmail(),u.getCardnum(),u.getPoint(),u.getRanks(),u.getExp(),u.getType()));
       }
       return list;
    }

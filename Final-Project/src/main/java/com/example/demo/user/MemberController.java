@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.demo.auth.TokenMemUserDetailsService;
+import com.example.demo.auth.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.auction.Auction;
 import com.example.demo.auction.AuctionDto;
@@ -25,38 +27,65 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
-@Controller
+@RestController
+@CrossOrigin(origins = "*")
 public class MemberController {
 
 	@Autowired
 	private MemberService service;
 	@Autowired
+	private TokenProvider provider;
+	@Autowired
 	private CardService cservice;
 	@Autowired
 	private AuctionService aservice;
-
-
-	@GetMapping("/join")
-	public String joinForm() {
-		return "member/login";
-	}
+	@Autowired
+	private AuthenticationManagerBuilder abuilder;
 	
 	@PostMapping("/join")
-	public String join(MemberDto u) {
-		
-		service.save(u);
-		return "redirect:/";
+	public Map join(MemberDto u) {
+		Map<String, Object> model = new HashMap<>();
+		try {
+			service.save(u);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.put("error", e.getMessage());
+		}
+		model.put("flag", true);
+
+		return model;
 	}
 	
-	@GetMapping("/loginform")
-	public String loginForm(String path,ModelMap map,HttpSession session,String msg) {
-		map.addAttribute("path",path);
-		map.addAttribute("msg",msg);
-		return "member/login";
+//	@GetMapping("/loginform")
+//	public String loginForm(String path,ModelMap map,HttpSession session,String msg) {
+//		map.addAttribute("path",path);
+//		map.addAttribute("msg",msg);
+//		return "member/login";
+//	}
+@PostMapping("/login")
+public Map login(String id, String pwd) {
+	log.info("id={}, pwd={}", id, pwd);
+	UsernamePasswordAuthenticationToken authtoken = new UsernamePasswordAuthenticationToken(id, pwd);
+	MemberDto memberDto = service.getUser(authtoken.getName());
+	log.info("authtoken={}", authtoken);
+	log.info("token={}", provider.getToken(service.getUser(id)));
+	Authentication auth = abuilder.getObject().authenticate(authtoken);
+	boolean flag = auth.isAuthenticated();
+	System.out.println("인증결과:" + flag);
+	Map map = new HashMap();
+	if(flag) {
+		String token = provider.getToken(service.getUser(id));
+		map.put("token", token);
 	}
-
+	map.put("flag", flag);
+	map.put("id",authtoken.getName());
+	map.put("type", memberDto.getType());
+	return map;
+}
 	@RequestMapping("/auth/login")
-	public String alogin(ModelMap map) {
+	public Map<String,Object> alogin(String id, String pwd) {
+		Map<String,Object> map = new HashMap<>();
+		UsernamePasswordAuthenticationToken auth_token = new UsernamePasswordAuthenticationToken(id, pwd);
 		ArrayList<AuctionDto> l=aservice.getAllByBids("경매중");
 		ArrayList<String> list= new ArrayList<>();
 		for(int i=0;i<l.size();i++) {
@@ -64,7 +93,7 @@ public class MemberController {
 				l.get(i).setMax(l.get(i).getMin());
 			}
 			list.add(null);
-			map.addAttribute("HBA"+(list.size()),l.get(i));
+			map.put("HBA"+(list.size()),l.get(i));
 			if(list.size()>5) {
 				break;
 			}
@@ -74,7 +103,7 @@ public class MemberController {
 		for(int i=0;i<l2.size();i++) {
 			if(l2.get(i).getType().equals(Auction.Type.BLIND) && l2.get(i).getStatus().equals("경매중")) {
 				list2.add(null);
-				map.addAttribute("BA"+(list2.size()),l2.get(i));
+				map.put("BA"+(list2.size()),l2.get(i));
 			}
 			if(list2.size()>5) {
 				break;
@@ -85,7 +114,7 @@ public class MemberController {
 		for(int i=0;i<l2.size();i++) {
 			if(l2.get(i).getType().equals(Auction.Type.EVENT) && l3.get(i).getStatus().equals("경매중")) {
 				list3.add(null);
-				map.addAttribute("EA"+(list3.size()),l3.get(i));
+				map.put("EA"+(list3.size()),l3.get(i));
 			}
 			if(list3.size()>5) {
 				break;
@@ -96,26 +125,26 @@ public class MemberController {
 		for(int i=0;i<l4.size();i++) {
 			if(l4.get(i).getStatus().equals("경매중")) {
 				list4.add(null);
-				map.addAttribute("LA"+(list4.size()),l4.get(i));
+				map.put("LA"+(list4.size()),l4.get(i));
 			}
 			if(list4.size()>5) {
 				break;
 			}
 		}
-		return "index";
+		return map;
 	}
 
-	// 관리자가 로그인 후 이동할 경로
-	@RequestMapping("/auth/index_admin")
-	public String adminHome() {
-		return "index_admin";
-	}
-
-	// 회원이 로그인 후 이동할 경로
-	@RequestMapping("/auth/index_member")
-	public String memberHome() {
-		return "index_member";
-	}
+//	// 관리자가 로그인 후 이동할 경로
+//	@RequestMapping("/auth/index_admin")
+//	public String adminHome() {
+//		return "index_admin";
+//	}
+//
+//	// 회원이 로그인 후 이동할 경로
+//	@RequestMapping("/auth/index_member")
+//	public String memberHome() {
+//		return "index_member";
+//	}
 
 	@RequestMapping("/auth/logout")
 	public String logout(HttpSession session) {
@@ -223,7 +252,6 @@ public class MemberController {
 	@PostMapping("/auth/member/point")
 	public String point(String id, String point, String customPoint, ModelMap map) {
 		MemberDto m = service.getUser(id);
-		
 		//point가 한글일때 숫자가 아닐때 오류처리
 		if(point.equals("custom")){
 			m.setPoint(m.getPoint() + Integer.parseInt(customPoint));
@@ -234,11 +262,11 @@ public class MemberController {
 		}
 
 		if(m.getExp()>=1400000){
-			m.setRank("Diamond");
+			m.setRanks("Diamond");
 		}else if(m.getExp()>=400000){
-			m.setRank("Gold");
+			m.setRanks("Gold");
 		}else if(m.getExp()>=100000){
-			m.setRank("Silver");
+			m.setRanks("Silver");
 		}
 		service.edit(m);
 		map.addAttribute("member", m);

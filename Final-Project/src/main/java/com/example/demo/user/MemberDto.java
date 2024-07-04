@@ -22,7 +22,7 @@ public class MemberDto {
        private Card cardnum;
 
        private int point;
-       private String rank;
+       private String ranks;
        private int exp;
        private String type;
        
@@ -34,7 +34,7 @@ public class MemberDto {
        			.email(u.getEmail())
        			.cardnum(u.getCardnum())
        			.point(u.getPoint())
-       			.rank(u.getRank())
+       			.rank(u.getRanks())
        			.exp(u.getExp())
        			.type(u.getType())
        			.build();
@@ -49,7 +49,7 @@ public class MemberDto {
    		this.email = email;
    		this.cardnum = cardnum;
    		this.point = point;
-   		this.rank = rank;
+   		this.ranks = rank;
    		this.exp = exp;
    		this.type = type;
    	}
